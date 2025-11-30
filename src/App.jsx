@@ -6,12 +6,12 @@ export default function App() {
   const [users, setUsers] = useState([]);
 
   const getProducts = async () => {
-    const res = await api.get("/products");
+    const res = await api.get("https://api.escuelajs.co/api/v1/products");
     setProducts(res.data);
   };
 
   const getUsers = async () => {
-    const res = await api.get("/users");
+    const res = await api.get("https://api.escuelajs.co/api/v1/users");
     setUsers(res.data);
   };
 
