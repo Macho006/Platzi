@@ -24,12 +24,10 @@ export default function App() {
   return (
     <div className="p-5 flex flex-col items-center justify-center w-full">
 
-      {/* CREATE PRODUCT — callback beramiz */}
       <CreateProduct onProductCreated={getProducts} />
 
       <h1 className="text-3xl font-bold mt-10 mb-6">Users</h1>
 
-      {/* USERS LIST */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 w-full max-w-7xl">
         {users.map((u) => (
           <div
@@ -53,7 +51,6 @@ export default function App() {
 
       <h1 className="text-3xl font-bold mt-16 mb-6">Products</h1>
 
-      {/* PRODUCTS LIST */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 w-full max-w-7xl">
         {products.map((p) => (
           <div

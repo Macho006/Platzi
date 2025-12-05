@@ -44,7 +44,7 @@ export default function CreateProduct({ onProductCreated }) {
         title: values.title,
         price: String(values.price),
         description: values.description,
-        categoryId: 1,
+        categoryId: 20,
         images: [values.image],
       });
       alert("Product created successfully!");
