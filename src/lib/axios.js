@@ -44,8 +44,8 @@ api.interceptors.response.use(
 
         const { access_token, refresh_token } = response.data
 
-        localStorage.getItem("access_token", access_token)
-        localStorage.getItem("refresh_token", refresh_token)
+        localStorage.setItem("access_token", access_token)
+        localStorage.setItem("refresh_token", refresh_token)
 
         orginalRequest.headers.Authorization = `Bearer ${access_token}`
 

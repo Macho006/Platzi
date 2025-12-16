@@ -1,74 +1,30 @@
-import { useEffect, useState } from "react";
-import { api } from "@/lib/axios";
-import CreateProduct from "@/pages/create product";
-
+import React from 'react';
+import useAuthStore from "@/store/useAuthStore";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { LogOut } from "lucide-react";
 export default function Home() {
-  const [products, setProducts] = useState([]);
-  const [users, setUsers] = useState([]);
+  const { user, logout } = useAuthStore();
 
-  const getProducts = async () => {
-    const res = await api.get("products");
-    setProducts(res.data);
+  const handleLogout = () => {
+    logout();
   };
-
-  const getUsers = async () => {
-    const res = await api.get("users");
-    setUsers(res.data);
-  };
-
-  useEffect(() => {
-    getProducts();
-    getUsers();
-  }, []);
 
   return (
-    <div className="p-5 flex flex-col items-center justify-center w-full">
-      <CreateProduct onProductCreated={getProducts} />
-
-      <h1 className="text-3xl font-bold mt-10 mb-6">Users</h1>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 w-full max-w-7xl">
-        {users.map((u) => (
-          <div
-            key={u.id}
-            className="bg-white shadow-md hover:shadow-lg transition-shadow rounded-xl p-4 flex flex-col items-center text-center border border-gray-200"
-          >
-            <img
-              src={u.avatar}
-              alt={u.name}
-              className="w-28 h-28 object-cover rounded-full mb-4"
-            />
-
-            <h3 className="text-lg font-semibold">{u.name}</h3>
-            <p className="text-gray-500">{u.email}</p>
-            <span className="mt-2 px-3 py-1 text-sm rounded-full bg-gray-100 text-gray-700">
-              {u.role}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      <h1 className="text-3xl font-bold mt-16 mb-6">Products</h1>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 w-full max-w-7xl">
-        {products.map((p) => (
-          <div
-            key={p.id}
-            className="bg-white border border-gray-200 rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow"
-          >
-            <img
-              src={p.images?.[0]}
-              alt={p.title}
-              className="w-full h-36 object-cover rounded-md mb-4"
-            />
-
-            <h3 className="font-semibold text-lg mb-2">{p.title}</h3>
-            <p className="text-gray-700 mb-1">💲 <b>{p.price}</b></p>
-            <p className="text-gray-500 text-sm line-clamp-3">
-              {p.description}
-            </p>
-          </div>
-        ))}
+    <div className="min-h-[80vh] w-full p-4">
+      <div className='flex items-center justify-between'>
+        <h1 className='text-3xl font-bold'>Platzi</h1>
+        <div className='flex gap-3'>
+          <Avatar className="w-8 h-8 mb-4">
+            <AvatarImage src={user?.avatar} alt={user?.name} />
+            <AvatarFallback className="text-2xl bg-slate-200">
+              {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
+            </AvatarFallback>
+          </Avatar>
+          <Button onClick={handleLogout} className="w-full h-8 sm:w-auto gap-2 cursor-pointer">
+            <LogOut size={18} />
+          </Button>
+        </div>
       </div>
     </div>
   );

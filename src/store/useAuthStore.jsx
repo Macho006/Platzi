@@ -14,7 +14,7 @@ export const useAuthStore = create((set) => ({
          const {access_token, refresh_token} = await authService.login(email, password)
 
          localStorage.setItem("access_token", access_token)
-         localStorage.setItem("refrsh_token", refresh_token )
+         localStorage.setItem("refresh_token", refresh_token )
 
          const user = await authService.getProfile()
 
@@ -41,12 +41,12 @@ export const useAuthStore = create((set) => ({
     },
 
     checkAuth: async () => {
-      const token = localStorage.setItem("access_token")
+      const token = localStorage.getItem("access_token") 
       if (!token) return
 
       try {
          const user = await authService.getProfile()
-         set({ user: user, isAuthenticated: false })
+         set({ user: user, isAuthenticated: true }) 
       } catch (error) {
          localStorage.removeItem("access_token")
          localStorage.removeItem("refresh_token")
