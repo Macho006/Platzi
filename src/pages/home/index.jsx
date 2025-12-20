@@ -3,12 +3,19 @@ import useAuthStore from "@/store/useAuthStore";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LogOut } from "lucide-react";
+import ProductsList from '@/pages/Products/ProductsList';
+import { useNavigate } from 'react-router-dom';
 export default function Home() {
   const { user, logout } = useAuthStore();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
   };
+
+  const handleClick = () => {
+    navigate("/getproducts")
+  }
 
   return (
     <div className="min-h-[80vh] w-full p-4">
@@ -26,6 +33,7 @@ export default function Home() {
           </Button>
         </div>
       </div>
+      <Button onClick={handleClick}>Get Products</Button>
     </div>
   );
 }
