@@ -14,7 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 const api = import.meta.env.VITE_BASE_URL
 
 const fetchProducts = async () => {
-  const response = await fetch(`${api}products`);
+  const response = await fetch(`${api}/products`);
   if (!response.ok) {
     throw new Error("xatolik yuz berdi");
   }
