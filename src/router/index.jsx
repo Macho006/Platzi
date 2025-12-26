@@ -5,7 +5,7 @@ import AuthLayout from "@/layouts/auth-layout";
 import Login from "@/pages/auth/login";
 import Register from "@/pages/auth/register";
 import MainLayout from "@/layouts/main-layout";
-import ProductsList from "@/pages/Products/ProductsList";
+import AddProduct from "@/pages/Products/AddProduct"
 
  const router = createBrowserRouter([
     {
@@ -33,7 +33,7 @@ import ProductsList from "@/pages/Products/ProductsList";
                     },
                     {
                         path: "/getproducts",
-                        element: <ProductsList />
+                        element: <AddProduct />
                     }
                 ]
             }

@@ -3,7 +3,6 @@ import useAuthStore from "@/store/useAuthStore";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LogOut } from "lucide-react";
-import ProductsList from '@/pages/Products/ProductsList';
 import { useNavigate } from 'react-router-dom';
 export default function Home() {
   const { user, logout } = useAuthStore();
