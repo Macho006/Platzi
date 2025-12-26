@@ -66,28 +66,78 @@ export default function ProductsManager() {
 
   const createMutation = useMutation({
     mutationFn: createProduct,
-    onSuccess: () => {
-      queryClient.invalidateQueries(["products"]);
+    onMutate: async (newProduct) => {
+      await queryClient.cancelQueries({ queryKey: ["products"] });
+
+      const previousProducts = queryClient.getQueryData(["products"]);
+
+      queryClient.setQueryData(["products"], (old) => {
+        const optimisticProduct = {
+          ...newProduct,
+          id: Math.random(), 
+          category: { name: "Adding..." }, 
+          images: newProduct.images || [],
+        };
+        return [optimisticProduct, ...(old || [])];
+      });
+
       handleCloseModal();
+
+      return { previousProducts };
     },
-    onError: (err) => alert(err.message),
+    onError: (err, newProduct, context) => {
+      queryClient.setQueryData(["products"], context.previousProducts);
+      alert(err.message);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+    },
   });
 
   const updateMutation = useMutation({
     mutationFn: updateProduct,
-    onSuccess: () => {
-      queryClient.invalidateQueries(["products"]);
+    onMutate: async ({ id, data }) => {
+      await queryClient.cancelQueries({ queryKey: ["products"] });
+      const previousProducts = queryClient.getQueryData(["products"]);
+
+      queryClient.setQueryData(["products"], (old) =>
+        old.map((product) =>
+          product.id === id ? { ...product, ...data, images: data.images } : product
+        )
+      );
+
       handleCloseModal();
+      return { previousProducts };
     },
-    onError: (err) => alert(err.message),
+    onError: (err, variables, context) => {
+      queryClient.setQueryData(["products"], context.previousProducts);
+      alert(err.message);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+    },
   });
 
   const deleteMutation = useMutation({
     mutationFn: deleteProduct,
-    onSuccess: () => {
-      queryClient.invalidateQueries(["products"]);
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: ["products"] });
+      const previousProducts = queryClient.getQueryData(["products"]);
+
+      // Ekranda o'sha ID li mahsulotni olib tashlaymiz
+      queryClient.setQueryData(["products"], (old) => 
+        old.filter((product) => product.id !== id)
+      );
+
+      return { previousProducts };
     },
-    onError: (err) => alert(err.message),
+    onError: (err, id, context) => {
+      queryClient.setQueryData(["products"], context.previousProducts);
+      alert(err.message);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+    },
   });
 
   const handleOpenModal = (product = null) => {
@@ -187,7 +237,7 @@ export default function ProductsManager() {
             <CardHeader className="p-0">
               <div className="w-full h-48 overflow-hidden rounded-t-lg bg-gray-100">
                 <img
-                  src={product.images[0]}
+                  src={product.images?.[0]}
                   alt={product.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   onError={(e) => { e.target.src = "https://placehold.co/600x400"; }}
@@ -275,8 +325,7 @@ export default function ProductsManager() {
 
             <DialogFooter>
                <Button type="button" variant="outline" onClick={handleCloseModal}>Cancel</Button>
-               <Button type="submit" disabled={isSubmitting}>
-                 {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+               <Button type="submit">
                  {editingProduct ? "Save" : "Add"}
                </Button>
             </DialogFooter>
